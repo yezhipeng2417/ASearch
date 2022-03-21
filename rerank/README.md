@@ -1,5 +1,9 @@
+模型文件：
 model file: simbert
-dataset: https://dataset-bj.cdn.bcebos.com/qianyan/LCSTS_new.zip
+
+数据文件：
+目前在用dataset: https://dataset-bj.cdn.bcebos.com/qianyan/LCSTS_new.zip
+出处：千言数据 https://www.luge.ai/#/
 
 
 目前方案：

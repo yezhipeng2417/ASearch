@@ -71,23 +71,23 @@ def evaluate(result):
             continue
     return top_1_cnt/total_cnt, top_3_cnt/total_cnt, top_5_cnt/total_cnt, top_10_cnt/total_cnt
 
-        
-        
-        
-
-
-    
 
 if __name__ == "__main__":
-    test_data_path = join(PATH_ARGS.DATA_DIR, 'baseline_dataset', 'dev.tsv')
+    test_data_path = join(PATH_ARGS.DATA_DIR, 'baseline_dataset', 'eda_dev.tsv')
     data = read_data(test_data_path)
     data = get_all_vecs(data, 128)
     result = find_most_similar(data.embed_A, data.embed_B)
     _1, _3, _5, _10 = evaluate(result)
     print(_1, _3, _5, _10)
 
-# 2000测试数据集
+# 2000 basic 测试数据集
 # top1 0.82 
 # top3 0.94 
 # top5 0.95 
 # top10 0.96
+
+# 2000 eda 测试数据集
+# top1 0.5345
+# top3 0.889
+# top5 0.9365
+# top10 0.9585

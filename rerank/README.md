@@ -4,23 +4,23 @@ qq匹配、相似文本打分、文本检索重排方案的探索与实现
 # Details
 ## 模型文件: 
 1. simbert
-locate: model_file
-model file: https://open.zhuiyi.ai/releases/nlp/models/zhuiyi/chinese_simbert_L-12_H-768_A-12.zip
-出处: https://github.com/ZhuiyiTechnology/pretrained-models
-cmd: cd model_file && wget https://open.zhuiyi.ai/releases/nlp/models/zhuiyi/chinese_simbert_L-12_H-768_A-12.zip && unzip chinese_simbert_L-12_H-768_A-12.zip && rm -rf chinese_simbert_L-12_H-768_A-12.zip
+locate: model_file  
+model file: https://open.zhuiyi.ai/releases/nlp/models/zhuiyi/chinese_simbert_L-12_H-768_A-12.zip  
+出处: https://github.com/ZhuiyiTechnology/pretrained-models  
+cmd: cd model_file && wget https://open.zhuiyi.ai/releases/nlp/models/zhuiyi/chinese_simbert_L-12_H-768_A-12.zip && unzip chinese_simbert_L-12_H-768_A-12.zip && rm -rf chinese_simbert_L-12_H-768_A-12.zip  
 
 ## 数据文件: 
 1. 摘要数据集
-locate: data/
-目前在用dataset: https://dataset-bj.cdn.bcebos.com/qianyan/LCSTS_new.zip
-出处: 千言数据 https://www.luge.ai/#/
-cmd: cd data && wget https://dataset-bj.cdn.bcebos.com/qianyan/LCSTS_new.zip && unzip LCSTS_new.zip && rm -rf LCSTS_new.zip
+locate: data/  
+目前在用dataset: https://dataset-bj.cdn.bcebos.com/qianyan/LCSTS_new.zip  
+出处: 千言数据 https://www.luge.ai/#/  
+cmd: cd data && wget https://dataset-bj.cdn.bcebos.com/qianyan/LCSTS_new.zip && unzip LCSTS_new.zip && rm -rf LCSTS_new.zip  
 
 2. 相似文本数据集
-locate: data/
-短文本相似度dataset: https://dataset-bj.cdn.bcebos.com/qianyan/lcqmc.zip
-出处: 千言数据 https://www.luge.ai/#/
-cmd: cd data && wget https://dataset-bj.cdn.bcebos.com/qianyan/lcqmc.zip && unzip lcqmc.zip && rm -rf lcqmc.zip 
+locate: data/  
+短文本相似度dataset: https://dataset-bj.cdn.bcebos.com/qianyan/lcqmc.zip  
+出处: 千言数据 https://www.luge.ai/#/  
+cmd: cd data && wget https://dataset-bj.cdn.bcebos.com/qianyan/lcqmc.zip && unzip lcqmc.zip && rm -rf lcqmc.zip   
 
 ## 目前方案: 
 ctr+cqr+simbert+xgb融合

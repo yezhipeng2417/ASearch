@@ -4,10 +4,14 @@ import sys
 join = os.path.join
 dirname = os.path.dirname
 
+class BASIC_ARGS:
+    RANDOM_STATE = 0
+
 class PATH_ARGS:
     # path
     ROOT_DIR = os.path.dirname(__file__)
-    DATA_DIR = join(ROOT_DIR, 'data')
+    DATA_DIR = join(ROOT_DIR, 'dataset')
+    RAW_DATA_DIR = join(ROOT_DIR, 'data')
     MODEL_DIR = join(ROOT_DIR, 'model')
     MODEL_FILE_DIR = join(ROOT_DIR, 'model_file')
 

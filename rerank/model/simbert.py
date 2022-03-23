@@ -49,7 +49,7 @@ def simbert_vec(texts):
         token_ids = tokenizer.encode(text, max_length=maxlen)[0]
         token_ids_list.append(token_ids)
     token_ids_list = sequence_padding(token_ids_list)
-    print(token_ids_list)
+    # print(token_ids_list)
     global sess
     global graph
     global encoder

@@ -6,6 +6,7 @@ dirname = os.path.dirname
 
 class BASIC_ARGS:
     RANDOM_STATE = 0
+    BATCH_SIZE = 2000
 
 class PATH_ARGS:
     # path

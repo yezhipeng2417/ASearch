@@ -9,6 +9,7 @@ from config import *
 import pandas as pd
 from tqdm import tqdm
 from sklearn.utils import shuffle
+from feature_extract.feature_extract_batch import extract_feature
 from data_management.eda_data import get_eda_data
 
 
@@ -34,13 +35,22 @@ class Data_Process_Pipeline:
         eda_dataset = pd.DataFrame(eda_dataset, columns=['A', 'B', 'label'])
         eda_dataset = shuffle(eda_dataset, random_state=BASIC_ARGS.RANDOM_STATE).iloc[:2000]
         return eda_dataset
-
-
-if __name__ == '__main__':
-    dpp = Data_Process_Pipeline()
-    # test_data = dpp.read_test_data(join(PATH_ARGS.RAW_DATA_DIR, 'lcqmc/dev.tsv'))
-    # test_data.to_csv(join(PATH_ARGS.DATA_DIR, 'baseline_dataset/dev.tsv'), index=False, encoding='gbk', sep='\t')
     
-    test_data = pd.read_csv(join(PATH_ARGS.DATA_DIR, 'baseline_dataset/dev.tsv'), encoding='gbk', sep='\t', names=['A', 'B', 'label'])
-    eda_dataset = dpp.export_eda_test_data(test_data)
-    eda_dataset.to_csv(join(PATH_ARGS.DATA_DIR, 'baseline_dataset/eda_dev.tsv'), index=False, encoding='gbk', sep='\t')
+    def export_features(self, data_path):
+        data = pd.read_csv(data_path, sep='\t', names=['A', 'B', "label"])
+        data = shuffle(data)
+        data = data.iloc[:2000]
+        features = extract_feature(data.A.tolist(), data.B.tolist())
+        print(len(features), len(features[0]))
+        features = [features[i][i] for i in range(len(features))]
+        return features, data.label.tolist()
+
+
+# if __name__ == '__main__':
+#     dpp = Data_Process_Pipeline()
+#     # test_data = dpp.read_test_data(join(PATH_ARGS.RAW_DATA_DIR, 'lcqmc/dev.tsv'))
+#     # test_data.to_csv(join(PATH_ARGS.DATA_DIR, 'baseline_dataset/dev.tsv'), index=False, encoding='gbk', sep='\t')
+    
+#     test_data = pd.read_csv(join(PATH_ARGS.DATA_DIR, 'baseline_dataset/dev.tsv'), encoding='gbk', sep='\t', names=['A', 'B', 'label'])
+#     eda_dataset = dpp.export_eda_test_data(test_data)
+#     eda_dataset.to_csv(join(PATH_ARGS.DATA_DIR, 'baseline_dataset/eda_dev.tsv'), index=False, encoding='gbk', sep='\t')

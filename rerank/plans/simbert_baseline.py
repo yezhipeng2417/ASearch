@@ -1,5 +1,6 @@
 import os
 import sys
+import json
 join = os.path.join
 dirname = os.path.dirname
 sys.path.append(join(dirname(__file__), '..'))
@@ -52,7 +53,10 @@ def evaluate(result):
     top_3_cnt = 0
     top_5_cnt = 0
     top_10_cnt = 0
+    bad_case = []
+    result_cases = []
     for k, v in result.items():
+        result_cases.append([k, v['scores']])
         if k in v['ids'][:1]:
             top_1_cnt += 1
             top_3_cnt += 1
@@ -66,19 +70,66 @@ def evaluate(result):
             top_5_cnt += 1
             top_10_cnt += 1
         elif k in v['ids'][:10]:
+            bad_case.append([k, v['scores']])
             top_10_cnt += 1
         else:
+            bad_case.append([k, v['scores']])
             continue
-    return top_1_cnt/total_cnt, top_3_cnt/total_cnt, top_5_cnt/total_cnt, top_10_cnt/total_cnt
+    return top_1_cnt/total_cnt, top_3_cnt/total_cnt, top_5_cnt/total_cnt, top_10_cnt/total_cnt, bad_case, result_cases
 
 
 if __name__ == "__main__":
+    test_data_path = join(PATH_ARGS.DATA_DIR, 'baseline_dataset', 'dev.tsv')
+    data = read_data(test_data_path)
+    data = get_all_vecs(data, 128)
+    result = find_most_similar(data.embed_A, data.embed_B)
+    _1, _3, _5, _10, bad_case, result_cases = evaluate(result)
+    print(_1, _3, _5, _10)
+    data_a = data.A.tolist()
+    data_b = data.B.tolist()
+    bad_cases_json = {}
+    for i in bad_case:
+        ix, res = i
+        bad_cases_json[ix] = {
+            'query': data_a[ix],
+            'answer': [{'text': data_b[a[0]], 'score': float(a[1])} for a in res]
+        }
+    json.dump(bad_cases_json, open(test_data_path+'_bad_cases.json', 'w'), indent=2, ensure_ascii=False)
+
+    result_cases_json = {}
+    for i in result_cases:
+        ix, res = i
+        result_cases_json[ix] = {
+            'query': data_a[ix],
+            'answer': [{'text': data_b[a[0]], 'score': float(a[1])} for a in res]
+        }
+    json.dump(result_cases_json, open(test_data_path+'_result_cases.json', 'w'), indent=2, ensure_ascii=False)
+
     test_data_path = join(PATH_ARGS.DATA_DIR, 'baseline_dataset', 'eda_dev.tsv')
     data = read_data(test_data_path)
     data = get_all_vecs(data, 128)
     result = find_most_similar(data.embed_A, data.embed_B)
-    _1, _3, _5, _10 = evaluate(result)
+    _1, _3, _5, _10, bad_case, result_cases = evaluate(result)
     print(_1, _3, _5, _10)
+    data_a = data.A.tolist()
+    data_b = data.B.tolist()
+    bad_cases_json = {}
+    for i in bad_case:
+        ix, res = i
+        bad_cases_json[ix] = {
+            'query': data_a[ix],
+            'answer': [{'text': data_b[a[0]], 'score': float(a[1])} for a in res]
+        }
+    json.dump(bad_cases_json, open(test_data_path+'_bad_cases.json', 'w'), indent=2, ensure_ascii=False)
+
+    result_cases_json = {}
+    for i in result_cases:
+        ix, res = i
+        result_cases_json[ix] = {
+            'query': data_a[ix],
+            'answer': [{'text': data_b[a[0]], 'score': float(a[1])} for a in res]
+        }
+    json.dump(result_cases_json, open(test_data_path+'_result_cases.json', 'w'), indent=2, ensure_ascii=False)
 
 # 2000 basic 测试数据集
 # top1 0.82 

@@ -58,6 +58,9 @@ class Text_Similarity:
         sent2word_idx = {}
         words = []
         for ix, sent in enumerate(sentences):
+            if sent != sent:
+                sent2word_idx[ix] = []
+                continue
             temp_words = jieba.lcut(sent)
             words_cnt = len(temp_words)
             words_index = len(words)
@@ -66,7 +69,8 @@ class Text_Similarity:
         words.extend(sentences)
 
         embeddings = []
-        for i in trange(0, len(words), BASIC_ARGS.BATCH_SIZE, desc='calculate vector'):
+        for i in range(0, len(words), BASIC_ARGS.BATCH_SIZE):
+        # for i in trange(0, len(words), BASIC_ARGS.BATCH_SIZE, desc='calculate vector'):
             temp_words = words[i: i+BASIC_ARGS.BATCH_SIZE]
             temp_embeddings = simbert_vec(temp_words)
             embeddings.extend(temp_embeddings)
@@ -74,7 +78,9 @@ class Text_Similarity:
         sent_embed, word_embed = embeddings[-len(sentences):], embeddings[:-len(sentences)]
         sent_word_cos_sim = self.cs.cos_similarity_matrix(sent_embed, word_embed)
         result = {}
+        cnt = 0
         for sent_id, word_ids in sent2word_idx.items():
+            cnt+=1
             temp_words_info = {}
             for word_id in word_ids:
                 word = words[word_id]
@@ -83,7 +89,7 @@ class Text_Similarity:
                     temp_words_info[word] += word_score
                 else:
                     temp_words_info[word] = word_score
-            result[sentences[sent_id]] = {
+            result[sent_id] = {
                 'words_info': copy(temp_words_info),
                 'embedding': sent_embed[sent_id]
             }

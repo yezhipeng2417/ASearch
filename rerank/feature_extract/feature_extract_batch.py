@@ -15,7 +15,6 @@ bts = BASIC_ARGS.BATCH_SIZE
 
 ts = Text_Similarity()
 def extract_feature(sents_a, sents_b):
-    print('lengths', len(sents_a), len(sents_b))
     range_a = list(range(0, len(sents_a), bts))
     range_b = list(range(0, len(sents_b), bts))
     pbar = tqdm(total=len(range_a)*len(range_b), desc='extract features')
@@ -35,6 +34,16 @@ def extract_feature(sents_a, sents_b):
         # print('#', temp_result)
         result.extend(copy(temp_result))
     return result
+
+def extract_feature_single(sents_a, sents_b):
+    pbar = tqdm(total=len(range(len(sents_a))), desc='extract features')
+    result = []
+    for sent_a, sent_b in zip(sents_a, sents_b):
+        sims = ts.seprate_similarity([sent_a], [sent_b])
+        result.extend(sims[0])
+        pbar.update(1)
+    return result
+    
 
 # if __name__ == "__main__":
 #     a, b = ['你知道如何祛斑', '今天天气真糟糕', '你知道如何祛斑', '今天天气真糟糕'], ['你知道如何祛斑吗哈哈哈', '今天天气真好啊', '今天天天气一点也不好']

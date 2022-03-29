@@ -1,6 +1,5 @@
 import os
 import sys
-from unicodedata import name
 join = os.path.join
 dirname = os.path.dirname
 sys.path.append(join(dirname(__file__), '..'))
@@ -20,8 +19,10 @@ class Data_Process_Pipeline:
     def export_test_data(self, data_path):
         test_data = pd.read_csv(data_path, sep='\t', names=['A', 'B', 'label'])
         test_data = test_data[['A', 'B']][test_data['label']==1]
-        test_data = shuffle(test_data, random_state=BASIC_ARGS.RANDOM_STATE).iloc[:2000]
-        return test_data
+        test_data = shuffle(test_data, random_state=BASIC_ARGS.RANDOM_STATE)
+        other_data = test_data.iloc[2000:10000].B.tolist()
+        test_data = test_data.iloc[:2000]
+        return test_data, other_data
     
     def export_eda_test_data(self, data):
         sent_A_eda = get_eda_data(data.A.tolist())
@@ -50,9 +51,10 @@ class Data_Process_Pipeline:
 
 if __name__ == '__main__':
     dpp = Data_Process_Pipeline()
-    test_data = dpp.export_test_data(join(PATH_ARGS.RAW_DATA_DIR, 'lcqmc/dev.tsv'))
+    test_data, other_data = dpp.export_test_data(join(PATH_ARGS.RAW_DATA_DIR, 'lcqmc/dev.tsv'))
     test_data.to_csv(join(PATH_ARGS.DATA_DIR, 'baseline_dataset/dev.tsv'), index=False, encoding='gbk', sep='\t')
+    open(join(PATH_ARGS.DATA_DIR, 'baseline_dataset/dev_other_data.tsv'), 'w').write('\n'.join(other_data))
     
-    test_data = pd.read_csv(join(PATH_ARGS.DATA_DIR, 'baseline_dataset/dev.tsv'), encoding='gbk', sep='\t', names=['A', 'B', 'label'])
-    eda_dataset = dpp.export_eda_test_data(test_data)
-    eda_dataset.to_csv(join(PATH_ARGS.DATA_DIR, 'baseline_dataset/eda_dev.tsv'), index=False, encoding='gbk', sep='\t')
+    # test_data = pd.read_csv(join(PATH_ARGS.DATA_DIR, 'baseline_dataset/dev.tsv'), encoding='gbk', sep='\t', names=['A', 'B', 'label'])
+    # eda_dataset = dpp.export_eda_test_data(test_data)
+    # eda_dataset.to_csv(join(PATH_ARGS.DATA_DIR, 'baseline_dataset/eda_dev.tsv'), index=False, encoding='gbk', sep='\t')

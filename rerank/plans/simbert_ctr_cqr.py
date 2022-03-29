@@ -34,7 +34,9 @@ def train():
     print(f1_report)
 
 def evaluate(test_data_path):
-    data = pd.read_csv(test_data_path, names=['A', 'B'], encoding='gbk', sep='\t').iloc[:2000]
+    b_other_data = open(join(PATH_ARGS.DATA_DIR, 'baseline_dataset/dev_other_data.tsv'), 'r').readlines()
+    b_other_data = [i.strip() for i in b_other_data]
+    data = pd.read_csv(test_data_path, names=['A', 'B'], encoding='gbk', sep='\t')
     data_a = [i for i in data.A.tolist() if i==i]
     data_b = [i for i in data.B.tolist() if i==i]
     features = extract_feature(data_a, data_b)
@@ -53,7 +55,7 @@ def evaluate(test_data_path):
     result = []
     for ix, row in enumerate(score):
         temp_pred_ix = [i[0] for i in row[:10]]
-        bad_cases.append([ix, row[:10]])
+        result.append([ix, row[:10]])
         if ix in temp_pred_ix[:1]:
             top_1_cnt += 1
             top_3_cnt += 1
@@ -73,6 +75,7 @@ def evaluate(test_data_path):
             bad_cases.append([ix, row[:10]])
             continue
     bad_cases = [[i[0], data_a[i[0]], [[data_b[j[0]], j[1]] for j in i[-1]]] for i in bad_cases]
+    result = [[i[0], data_a[i[0]], [[data_b[j[0]], j[1]] for j in i[-1]]] for i in result]
     bad_cases_json = {}
     for item in bad_cases:
         ix, query, answer = item
